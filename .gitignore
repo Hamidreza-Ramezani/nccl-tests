@@ -3,5 +3,5 @@
 #
 # See LICENCE.txt for license information
 /build
-
 tags
+/.idea/*

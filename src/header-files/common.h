@@ -6,14 +6,14 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
-#include "nccl.h"
-#include <stdio.h>
-#include <algorithm>
-#include <curand.h>
+#include "../../../../../../usr/include/nccl.h"
+#include "../../../../../../usr/include/stdio.h"
+#include "../../../../../../usr/include/c++/5/algorithm"
+#include "../../../../../../usr/local/cuda/include/curand.h"
 #ifdef MPI_SUPPORT
 #include "mpi.h"
 #endif
-#include <pthread.h>
+#include "../../../../../../usr/include/pthread.h"
 #include "nccl1_compat.h"
 
 #define CUDACHECK(cmd) do {                         \
@@ -137,7 +137,7 @@ struct testThread {
   testResult_t ret;
 };
 
-#include <chrono>
+#include "../../../../../../usr/include/c++/5/chrono"
 
 // Provided by common.cu
 extern void Barrier(struct threadArgs* args);
@@ -150,7 +150,7 @@ extern void AllocateBuffs(void **sendbuff, void **recvbuff, void **expected, voi
 extern void print_line_header (size_t size, size_t count, const char *typeName, const char *opName, int root);
 extern void print_header();
 
-#include <unistd.h>
+#include "../../../../../../usr/include/unistd.h"
 
 static void getHostName(char* hostname, int maxlen) {
   gethostname(hostname, maxlen);
@@ -162,7 +162,7 @@ static void getHostName(char* hostname, int maxlen) {
   }
 }
 
-#include <stdint.h>
+#include "../../../../../../usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h"
 
 static uint64_t getHostHash(const char* string) {
   // Based on DJB2, result = result * 33 + char

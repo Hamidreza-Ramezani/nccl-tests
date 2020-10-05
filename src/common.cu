@@ -4,7 +4,7 @@
  * See LICENSE.txt for license information
  ************************************************************************/
 
-#include "common.h"
+#include "header-files/common.h"
 #include <pthread.h>
 #include <cstdio>
 #include <getopt.h>

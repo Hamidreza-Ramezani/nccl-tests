@@ -5,7 +5,7 @@
  ************************************************************************/
 
 #include "cuda_runtime.h"
-#include "common.h"
+#include "header-files/common.h"
 
 void print_header() {
   PRINT("# %10s  %12s  %6s            out-of-place                       in-place          \n", "", "", "");
