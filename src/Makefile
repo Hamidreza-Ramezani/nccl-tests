@@ -7,7 +7,7 @@
 CUDA_HOME ?= /usr/local/cuda
 PREFIX ?= /usr/local
 VERBOSE ?= 0
-DEBUG ?= 0
+DEBUG ?= 1
 
 CUDA_LIB ?= $(CUDA_HOME)/lib64
 CUDA_INC ?= $(CUDA_HOME)/include
@@ -15,6 +15,9 @@ NVCC = $(CUDA_HOME)/bin/nvcc
 
 CUDA_VERSION = $(strip $(shell which $(NVCC) >/dev/null && $(NVCC) --version | grep release | sed 's/.*release //' | sed 's/\,.*//'))
 CUDA_MAJOR = $(shell echo $(CUDA_VERSION) | cut -d "." -f 1)
+
+
+
 
 # Better define NVCC_GENCODE in your environment to the minimal set
 # of archs to reduce compile time.
@@ -46,6 +49,8 @@ NVCUFLAGS += -O0 -G -g
 CXXFLAGS  += -O0 -g -ggdb3
 endif
 
+#NVCUFLAGS += -O0 -G -g     
+#CXXFLAGS  += -O0 -g -ggdb3 
 ifneq ($(VERBOSE), 0)
 NVCUFLAGS += -Xcompiler -Wall,-Wextra,-Wno-unused-parameter
 else
