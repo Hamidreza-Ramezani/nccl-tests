@@ -37,6 +37,7 @@ testResult_t AllReduceInitData(struct threadArgs* args, ncclDataType_t type, ncc
     CUDACHECK(cudaSetDevice(gpuid));
     int rank = ((args->proc*args->nThreads + args->thread)*args->nGpus + i);
     CUDACHECK(cudaMemset(args->recvbuffs[i], 0, args->expectedBytes));
+    CUDACHECK(cudaMemset(args->tempbuffs[i], 0, args->expectedBytes));
     void* data = in_place ? args->recvbuffs[i] : args->sendbuffs[i];
     TESTCHECK(InitData(data, sendcount, type, rep, rank));
     TESTCHECK(InitDataReduce(args->expected[i], recvcount, 0, type, op, rep, nranks));
@@ -53,8 +54,8 @@ void AllReduceGetBw(size_t count, int typesize, double sec, double* algBw, doubl
   *busBw = baseBw * factor;
 }
 
-testResult_t AllReduceRunColl(void* sendbuff, void* recvbuff, size_t count, ncclDataType_t type, ncclRedOp_t op, int root, ncclComm_t comm, cudaStream_t stream) {
-  NCCLCHECK(ncclAllReduce(sendbuff, recvbuff, count, type, op, comm, stream));
+testResult_t AllReduceRunColl(void* sendbuff, void* recvbuff, void* tempbuff, size_t count, ncclDataType_t type, ncclRedOp_t op, int root, ncclComm_t comm, cudaStream_t stream) {
+  NCCLCHECK(ncclAllReduce(sendbuff, recvbuff, tempbuff, count, type, op, comm, stream));
   return testSuccess;
 }
 

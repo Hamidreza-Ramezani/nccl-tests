@@ -374,6 +374,7 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     int rank = ((args->proc*args->nThreads + args->thread)*args->nGpus + i);
     char* recvBuff = ((char*)args->recvbuffs[i]) + shift;
     char* sendBuff = ((char*)args->sendbuffs[i]) + shift;
+    char* tempBuff = ((char*)args->tempbuffs[i]) + shift;
     TESTCHECK(args->collTest->runColl(
           (void*)(in_place ? recvBuff + args->sendInplaceOffset*rank : sendBuff),
           (void*)(in_place ? recvBuff + args->recvInplaceOffset*rank : recvBuff),
@@ -556,9 +557,10 @@ testResult_t threadLaunch(struct testThread* thread) {
   return testSuccess;
 }
 
-testResult_t AllocateBuffs(void **sendbuff, size_t sendBytes, void **recvbuff, size_t recvBytes, void **expected, size_t nbytes, int nranks) {
+testResult_t AllocateBuffs(void **sendbuff, size_t sendBytes, void **recvbuff, size_t recvBytes, void **tempbuff, void **expected, size_t nbytes, int nranks) {
     CUDACHECK(cudaMalloc(sendbuff, nbytes));
     CUDACHECK(cudaMalloc(recvbuff, nbytes));
+    CUDACHECK(cudaMalloc(tempbuff, nbytes));
     CUDACHECK(cudaMalloc(expected, recvBytes));
     return testSuccess;
 }
@@ -757,6 +759,7 @@ testResult_t run() {
   cudaStream_t streams[nGpus*nThreads];
   void* sendbuffs[nGpus*nThreads];
   void* recvbuffs[nGpus*nThreads];
+  void* tempbuffs[nGpus*nThreads];
   void* expected[nGpus*nThreads];
   size_t sendBytes, recvBytes;
 
@@ -764,7 +767,7 @@ testResult_t run() {
 
   for (int i=0; i<nGpus*nThreads; i++) {
     CUDACHECK(cudaSetDevice(localRank*nThreads*nGpus+i));
-    AllocateBuffs(sendbuffs+i, sendBytes, recvbuffs+i, recvBytes, expected+i, (size_t)maxBytes, nProcs*nThreads*nGpus);
+    AllocateBuffs(sendbuffs+i, sendBytes, recvbuffs+i, recvBytes, tempbuffs+i, expected+i, (size_t)maxBytes, nProcs*nThreads*nGpus);
     CUDACHECK(cudaStreamCreateWithFlags(streams+i, cudaStreamNonBlocking));
   }
 
@@ -818,6 +821,7 @@ testResult_t run() {
     threads[t].args.nGpus=nGpus;
     threads[t].args.sendbuffs = sendbuffs+t*nGpus;
     threads[t].args.recvbuffs = recvbuffs+t*nGpus;
+    threads[t].args.tempbuffs = tempbuffs+t*nGpus;
     threads[t].args.expected = expected+t*nGpus;
     threads[t].args.ncclId = ncclId;
     threads[t].args.comms=comms+t*nGpus;
@@ -868,6 +872,7 @@ testResult_t run() {
   for (int i=0; i<nGpus*nThreads; i++) {
     CUDACHECK(cudaFree(sendbuffs[i]));
     CUDACHECK(cudaFree(recvbuffs[i]));
+    CUDACHECK(cudaFree(tempbuffs[i]));
     CUDACHECK(cudaFree(expected[i]));
   }
   CUDACHECK(cudaFreeHost(delta));

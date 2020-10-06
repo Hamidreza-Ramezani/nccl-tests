@@ -52,11 +52,11 @@ void BroadcastGetBw(size_t count, int typesize, double sec, double* algBw, doubl
   *busBw = baseBw * factor;
 }
 
-testResult_t BroadcastRunColl(void* sendbuff, void* recvbuff, size_t count, ncclDataType_t type, ncclRedOp_t op, int root, ncclComm_t comm, cudaStream_t stream) {
+testResult_t BroadcastRunColl(void* sendbuff, void* recvbuff, void* tempbuff, size_t count, ncclDataType_t type, ncclRedOp_t op, int root, ncclComm_t comm, cudaStream_t stream) {
   int rank;
   NCCLCHECK(ncclCommUserRank(comm, &rank));
 #if NCCL_MAJOR >= 2 && NCCL_MINOR >= 2
-  NCCLCHECK(ncclBroadcast(sendbuff, recvbuff, count, type, root, comm, stream));
+  NCCLCHECK(ncclBroadcast(sendbuff, recvbuff, tempbuff, count, type, root, comm, stream));
 #else
   if (rank == root) {
       NCCLCHECK(ncclBcast(sendbuff, count, type, root, comm, stream));

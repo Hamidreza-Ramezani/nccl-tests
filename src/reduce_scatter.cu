@@ -54,8 +54,8 @@ void ReduceScatterGetBw(size_t count, int typesize, double sec, double* algBw, d
   *busBw = baseBw * factor;
 }
 
-testResult_t ReduceScatterRunColl(void* sendbuff, void* recvbuff, size_t count, ncclDataType_t type, ncclRedOp_t op, int root, ncclComm_t comm, cudaStream_t stream) {
-  NCCLCHECK(ncclReduceScatter(sendbuff, recvbuff, count, type, op, comm, stream));
+testResult_t ReduceScatterRunColl(void* sendbuff, void* recvbuff, void* tempbuff, size_t count, ncclDataType_t type, ncclRedOp_t op, int root, ncclComm_t comm, cudaStream_t stream) {
+  NCCLCHECK(ncclReduceScatter(sendbuff, recvbuff, tempbuff, count, type, op, comm, stream));
   return testSuccess;
 }
 
