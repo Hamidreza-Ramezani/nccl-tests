@@ -6,7 +6,8 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
-#include "../../../../../../usr/include/nccl.h"
+//#include "../../../../../../usr/include/nccl.h"
+#include "nccl.h"
 #include "../../../../../../usr/include/stdio.h"
 #include "../../../../../../usr/include/c++/5/algorithm"
 #include "../../../../../../usr/local/cuda/include/curand.h"
