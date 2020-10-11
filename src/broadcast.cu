@@ -19,11 +19,13 @@ void print_line_header (size_t size, size_t count, const char *typeName, const c
   PRINT("%12li  %12li  %6s  %6i", size, count, typeName, root);
 }
 
-void BroadcastGetCollByteCount(size_t *sendcount, size_t *recvcount, size_t *paramcount, size_t *sendInplaceOffset, size_t *recvInplaceOffset, size_t count, int nranks) {
+void BroadcastGetCollByteCount(size_t *sendcount, size_t *recvcount, size_t *tempcount, size_t *paramcount, size_t *sendInplaceOffset, size_t *recvInplaceOffset, size_t *tempInplaceOffset, size_t count, int nranks) {
   *sendcount = count;
   *recvcount = count;
+  *tempcount = count;
   *sendInplaceOffset = 0;
   *recvInplaceOffset = 0;
+  *tempInplaceOffset = 0;
   *paramcount = *sendcount;
 }
 
@@ -75,9 +77,9 @@ struct testColl broadcastTest = {
   BroadcastRunColl
 };
 
-void BroadcastGetBuffSize(size_t *sendcount, size_t *recvcount, size_t count, int nranks) {
-  size_t paramcount, sendInplaceOffset, recvInplaceOffset;
-  BroadcastGetCollByteCount(sendcount, recvcount, &paramcount, &sendInplaceOffset, &recvInplaceOffset, count, nranks);
+void BroadcastGetBuffSize(size_t *sendcount, size_t *recvcount, size_t *tempcount, size_t count, int nranks) {
+  size_t paramcount, sendInplaceOffset, recvInplaceOffset, tempInplaceOffset;
+  BroadcastGetCollByteCount(sendcount, recvcount, tempcount, &paramcount, &sendInplaceOffset, &recvInplaceOffset, &tempInplaceOffset, count, nranks);
 }
 
 testResult_t BroadcastRunTest(struct threadArgs* args, int root, ncclDataType_t type, const char* typeName, ncclRedOp_t op, const char* opName) {

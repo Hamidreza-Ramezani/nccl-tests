@@ -19,17 +19,20 @@ void print_line_header (size_t size, size_t count, const char *typeName, const c
   PRINT("%12li  %12li  %6s  %6s", size, count, typeName, opName);
 }
 
-void AllReduceGetCollByteCount(size_t *sendcount, size_t *recvcount, size_t *paramcount, size_t *sendInplaceOffset, size_t *recvInplaceOffset, size_t count, int nranks) {
+void AllReduceGetCollByteCount(size_t *sendcount, size_t *recvcount, size_t *tempcount, size_t *paramcount, size_t *sendInplaceOffset, size_t *recvInplaceOffset, size_t *tempInplaceOffset, size_t count, int nranks) {
   *sendcount = count;
   *recvcount = count;
+  *tempcount = count;
   *sendInplaceOffset = 0;
   *recvInplaceOffset = 0;
+  *tempInplaceOffset = 0;
   *paramcount = *sendcount;
 }
 
 testResult_t AllReduceInitData(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t op, int root, int rep, int in_place) {
   size_t sendcount = args->sendBytes / wordSize(type);
   size_t recvcount = args->expectedBytes / wordSize(type);
+  size_t tempcount = args->tempBytes / wordSize(type);
   int nranks = args->nProcs*args->nThreads*args->nGpus;
 
   for (int i=0; i<args->nGpus; i++) {
@@ -37,7 +40,7 @@ testResult_t AllReduceInitData(struct threadArgs* args, ncclDataType_t type, ncc
     CUDACHECK(cudaSetDevice(gpuid));
     int rank = ((args->proc*args->nThreads + args->thread)*args->nGpus + i);
     CUDACHECK(cudaMemset(args->recvbuffs[i], 0, args->expectedBytes));
-    CUDACHECK(cudaMemset(args->tempbuffs[i], 0, args->expectedBytes));
+    CUDACHECK(cudaMemset(args->tempbuffs[i], 0, args->tempBytes));
     void* data = in_place ? args->recvbuffs[i] : args->sendbuffs[i];
     TESTCHECK(InitData(data, sendcount, type, rep, rank));
     TESTCHECK(InitDataReduce(args->expected[i], recvcount, 0, type, op, rep, nranks));
@@ -67,9 +70,9 @@ struct testColl allReduceTest = {
   AllReduceRunColl
 };
 
-void AllReduceGetBuffSize(size_t *sendcount, size_t *recvcount, size_t count, int nranks) {
-  size_t paramcount, sendInplaceOffset, recvInplaceOffset;
-  AllReduceGetCollByteCount(sendcount, recvcount, &paramcount, &sendInplaceOffset, &recvInplaceOffset, count, nranks);
+void AllReduceGetBuffSize(size_t *sendcount, size_t *recvcount, size_t *tempcount, size_t count, int nranks) {
+  size_t paramcount, sendInplaceOffset, recvInplaceOffset, tempInplaceOffset;
+  AllReduceGetCollByteCount(sendcount, recvcount, tempcount, &paramcount, &sendInplaceOffset, &recvInplaceOffset, &tempInplaceOffset, count, nranks);
 }
 
 testResult_t AllReduceRunTest(struct threadArgs* args, int root, ncclDataType_t type, const char* typeName, ncclRedOp_t op, const char* opName) {

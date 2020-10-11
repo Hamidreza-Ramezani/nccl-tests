@@ -475,16 +475,19 @@ testResult_t BenchTime(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
 
 void setupArgs(size_t size, ncclDataType_t type, struct threadArgs* args) {
   int nranks = args->nProcs*args->nGpus*args->nThreads;
-  size_t count, sendCount, recvCount, paramCount, sendInplaceOffset, recvInplaceOffset;
+  size_t count, sendCount, recvCount, tempCount, paramCount, sendInplaceOffset, recvInplaceOffset, tempInplaceOffset;
 
   count = size / wordSize(type);
-  args->collTest->getCollByteCount(&sendCount, &recvCount, &paramCount, &sendInplaceOffset, &recvInplaceOffset, (size_t)count, (size_t)nranks);
+  args->collTest->getCollByteCount(&sendCount, &recvCount, &tempCount, &paramCount, &sendInplaceOffset, &recvInplaceOffset, &tempInplaceOffset, (size_t)count, (size_t)nranks);
 
   args->nbytes = paramCount * wordSize(type);
   args->sendBytes = sendCount * wordSize(type);
   args->expectedBytes = recvCount * wordSize(type);
+  args->tempBytes = tempCount * wordSize(type);
+  //args->tempBytes = paramCount * wordSize(type);
   args->sendInplaceOffset = sendInplaceOffset * wordSize(type);
   args->recvInplaceOffset = recvInplaceOffset * wordSize(type);
+  args->tempInplaceOffset = tempInplaceOffset * wordSize(type);
 }
 
 testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* typeName, ncclRedOp_t op, const char* opName, int root) {
@@ -558,7 +561,7 @@ testResult_t threadLaunch(struct testThread* thread) {
   return testSuccess;
 }
 
-testResult_t AllocateBuffs(void **sendbuff, size_t sendBytes, void **recvbuff, size_t recvBytes, void **tempbuff, void **expected, size_t nbytes, int nranks) {
+testResult_t AllocateBuffs(void **sendbuff, size_t sendBytes, void **recvbuff, size_t recvBytes, void **tempbuff, size_t tempBytes, void **expected, size_t nbytes, int nranks) {
     CUDACHECK(cudaMalloc(sendbuff, nbytes));
     CUDACHECK(cudaMalloc(recvbuff, nbytes));
     CUDACHECK(cudaMalloc(tempbuff, nbytes));
@@ -762,13 +765,14 @@ testResult_t run() {
   void* recvbuffs[nGpus*nThreads];
   void* tempbuffs[nGpus*nThreads];
   void* expected[nGpus*nThreads];
-  size_t sendBytes, recvBytes;
+  size_t sendBytes, recvBytes, tempBytes;
 
-  ncclTestEngine.getBuffSize(&sendBytes, &recvBytes, (size_t)maxBytes, (size_t)nProcs*nGpus*nThreads);
+  ncclTestEngine.getBuffSize(&sendBytes, &recvBytes, &tempBytes, (size_t)maxBytes, (size_t)nProcs*nGpus*nThreads);
 
   for (int i=0; i<nGpus*nThreads; i++) {
     CUDACHECK(cudaSetDevice(localRank*nThreads*nGpus+i));
-    AllocateBuffs(sendbuffs+i, sendBytes, recvbuffs+i, recvBytes, tempbuffs+i, expected+i, (size_t)maxBytes, nProcs*nThreads*nGpus);
+    AllocateBuffs(sendbuffs+i, sendBytes, recvbuffs+i, recvBytes, tempbuffs+i, tempBytes, expected+i, (size_t)maxBytes, nProcs*nThreads*nGpus);
+//    AllocateBuffs(sendbuffs+i, sendBytes, recvbuffs+i, recvBytes, tempbuffs+i, recvBytes, expected+i, (size_t)maxBytes, nProcs*nThreads*nGpus);
     CUDACHECK(cudaStreamCreateWithFlags(streams+i, cudaStreamNonBlocking));
   }
 

@@ -19,11 +19,13 @@ void print_line_header (size_t size, size_t count, const char *typeName, const c
   PRINT("%12li  %12li  %6s", size, count, typeName);
 }
 
-void AllGatherGetCollByteCount(size_t *sendcount, size_t *recvcount, size_t *paramcount, size_t *sendInplaceOffset, size_t *recvInplaceOffset, size_t count, int nranks) {
+void AllGatherGetCollByteCount(size_t *sendcount, size_t *recvcount, size_t *tempcount, size_t *paramcount, size_t *sendInplaceOffset, size_t *recvInplaceOffset, size_t *tempInplaceOffset, size_t count, int nranks) {
   *sendcount = count/nranks;
   *recvcount = (count/nranks)*nranks;
+  *tempcount = (count/nranks)*nranks;
   *sendInplaceOffset = count/nranks;
   *recvInplaceOffset = 0;
+  *tempInplaceOffset = 0;
   *paramcount = *sendcount;
 }
 
@@ -68,9 +70,9 @@ struct testColl allGatherTest = {
   AllGatherRunColl
 };
 
-void AllGatherGetBuffSize(size_t *sendcount, size_t *recvcount, size_t count, int nranks) {
-  size_t paramcount, sendInplaceOffset, recvInplaceOffset;
-  AllGatherGetCollByteCount(sendcount, recvcount, &paramcount, &sendInplaceOffset, &recvInplaceOffset, count, nranks);
+void AllGatherGetBuffSize(size_t *sendcount, size_t *recvcount, size_t *tempcount, size_t count, int nranks) {
+  size_t paramcount, sendInplaceOffset, recvInplaceOffset, tempInplaceOffset;
+  AllGatherGetCollByteCount(sendcount, recvcount, tempcount, &paramcount, &sendInplaceOffset, &recvInplaceOffset, &tempInplaceOffset, count, nranks);
 }
 
 testResult_t AllGatherRunTest(struct threadArgs* args, int root, ncclDataType_t type, const char* typeName, ncclRedOp_t op, const char* opName) {
