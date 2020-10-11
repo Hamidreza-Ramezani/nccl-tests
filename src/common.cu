@@ -4,7 +4,7 @@
  * See LICENSE.txt for license information
  ************************************************************************/
 
-#include "header-files/common.h"
+#include "common.h"
 #include <pthread.h>
 #include <cstdio>
 #include <getopt.h>
@@ -378,6 +378,7 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     TESTCHECK(args->collTest->runColl(
           (void*)(in_place ? recvBuff + args->sendInplaceOffset*rank : sendBuff),
           (void*)(in_place ? recvBuff + args->recvInplaceOffset*rank : recvBuff),
+          (void*)(in_place ? tempBuff + args->tempInplaceOffset*rank : tempBuff),
         count, type, op, root, args->comms[i], args->streams[i]));
   }
   if (args->nGpus > 1) NCCLCHECK(ncclGroupEnd());
