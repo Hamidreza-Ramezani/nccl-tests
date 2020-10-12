@@ -39,6 +39,7 @@ static int nccltype = ncclFloat;
 static int ncclroot = 0;
 static int parallel_init = 0;
 static int blocking_coll = 0;
+//static int blocking_coll = 1;
 
 double parsesize(char *value) {
     long long int units;
