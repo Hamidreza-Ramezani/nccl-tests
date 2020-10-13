@@ -70,7 +70,7 @@ struct testColl {
   testResult_t (*initData)(struct threadArgs* args, ncclDataType_t type,
       ncclRedOp_t op, int root, int rep, int in_place);
   void (*getBw)(size_t count, int typesize, double sec, double* algBw, double* busBw, int nranks);
-  testResult_t (*runColl)(void* sendbuff, void* recvbuff, void* tempbuff, size_t count, ncclDataType_t type,
+  testResult_t (*runColl)(void* sendbuff, void* recvbuff, void* tempbuff1, void* tempbuff2, size_t count, ncclDataType_t type,
       ncclRedOp_t op, int root, ncclComm_t comm, cudaStream_t stream);
 };
 extern struct testColl allReduceTest;
@@ -105,7 +105,8 @@ struct threadArgs {
   size_t sendInplaceOffset;
   void** recvbuffs;
   size_t recvInplaceOffset;
-  void** tempbuffs;
+  void** tempbuffs1;
+  void** tempbuffs2;
   size_t tempBytes;
   size_t tempInplaceOffset;
   ncclUniqueId ncclId;
@@ -147,7 +148,7 @@ extern void Barrier(struct threadArgs* args);
 extern testResult_t TimeTest(struct threadArgs* args, ncclDataType_t type, const char* typeName, ncclRedOp_t op,  const char* opName, int root);
 extern testResult_t InitDataReduce(void* data, const size_t count, const size_t offset, ncclDataType_t type, ncclRedOp_t op, const int rep, const int nranks);
 extern testResult_t InitData(void* data, const size_t count, ncclDataType_t type, const int rep, const int rank);
-extern void AllocateBuffs(void **sendbuff, void **recvbuff, void **tempbuff, void **expected, void **expectedHost, size_t nbytes, int nranks);
+extern void AllocateBuffs(void **sendbuff, void **recvbuff, void **tempbuff1, void **tempbuff2, void **expected, void **expectedHost, size_t nbytes, int nranks);
 
 
 // Provided by each coll

@@ -1,3 +1,9 @@
+# How to compile: 
+
+```shell
+$ source script.sh
+```
+
 # NCCL Tests
 
 These tests check both the performance and the correctness of [NCCL](http://github.com/nvidia/nccl) operations.
