@@ -375,13 +375,13 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     int rank = ((args->proc*args->nThreads + args->thread)*args->nGpus + i);
     char* recvBuff = ((char*)args->recvbuffs[i]) + shift;
     char* sendBuff = ((char*)args->sendbuffs[i]) + shift;
-    char* tempBuff1 = ((char*)args->tempbuffs1[i]) + shift;
-    char* tempBuff2 = ((char*)args->tempbuffs2[i]) + shift;
+    //char* tempBuff1 = ((char*)args->tempbuffs1[i]) + shift;
+    //char* tempBuff2 = ((char*)args->tempbuffs2[i]) + shift;
     TESTCHECK(args->collTest->runColl(
           (void*)(in_place ? recvBuff + args->sendInplaceOffset*rank : sendBuff),
           (void*)(in_place ? recvBuff + args->recvInplaceOffset*rank : recvBuff),
-          (void*)(in_place ? tempBuff1 + args->tempInplaceOffset*rank : tempBuff1),
-          (void*)(in_place ? tempBuff2 + args->tempInplaceOffset*rank : tempBuff2),
+          //(void*)(in_place ? tempBuff1 + args->tempInplaceOffset*rank : tempBuff1),
+          //(void*)(in_place ? tempBuff2 + args->tempInplaceOffset*rank : tempBuff2),
         count, type, op, root, args->comms[i], args->streams[i]));
   }
   if (args->nGpus > 1) NCCLCHECK(ncclGroupEnd());
