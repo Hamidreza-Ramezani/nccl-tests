@@ -1,0 +1,16 @@
++set pagination off
++break /nfs/scistore08/alistgrp/hramezan/nccl-tests/src/common.cu:767
+Breakpoint 1 at 0x6bc3: file common.cu, line 767.
++run
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x2aab03bf9700 (LWP 22816)]
+[New Thread 0x2aab052fb700 (LWP 22817)]
+[New Thread 0x2aab054fc700 (LWP 22818)]
+
+Thread 1 "all_reduce_perf" hit Breakpoint 1, run () at common.cu:767
+767	    CUDACHECK(cudaSetDevice(localRank*nThreads*nGpus+i));
++- 
++:qqqqqqQq
+Undefined command: "".  Try "help".
++q

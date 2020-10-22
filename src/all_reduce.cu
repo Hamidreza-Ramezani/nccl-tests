@@ -54,6 +54,9 @@ void AllReduceGetBw(size_t count, int typesize, double sec, double* algBw, doubl
 }
 
 testResult_t AllReduceRunColl(void* sendbuff, void* recvbuff, size_t count, ncclDataType_t type, ncclRedOp_t op, int root, ncclComm_t comm, cudaStream_t stream) {
+  int cudaDev;
+  NCCLCHECK(ncclCommCuDevice(comm, &cudaDev));
+  CUDACHECK(cudaSetDevice(cudaDev));
   NCCLCHECK(ncclAllReduce(sendbuff, recvbuff, count, type, op, comm, stream));
   return testSuccess;
 }

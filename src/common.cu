@@ -323,8 +323,13 @@ testResult_t testStreamSynchronize(int ngpus, cudaStream_t* streams, ncclComm_t*
    int idle = 1;
    for (int i=0; i<ngpus; i++) {
      if (done[i]) continue;
-
+    
+     CUDACHECK(cudaSetDevice(i));
+     CUDACHECK(cudaStreamSynchronize(streams[i]));
      cudaErr = cudaStreamQuery(streams[i]);
+     //while ((cudaErr = cudaStreamQuery(streams[i])) != cudaSuccess) {
+     //   cudaStreamSynchronize(streams[i]);
+     //}
      if (cudaErr == cudaSuccess) {
        done[i] = 1;
        remaining--;
@@ -332,7 +337,22 @@ testResult_t testStreamSynchronize(int ngpus, cudaStream_t* streams, ncclComm_t*
        continue;
      }
 
-     if (cudaErr != cudaErrorNotReady) CUDACHECK(cudaErr);
+     if (cudaErr != cudaErrorNotReady){ 
+       //if (cudaErr != cudaSuccess) {
+       //   if (cudaErr == cudaErrorInitializationError) {
+       //      printf("cudaErrorInitializationError has happened\n");
+       //   }
+
+       //   if (cudaErr == cudaErrorInsufficientDriver) {
+       //      printf("cudaErrorInsufficientDriver has happened\n");
+       //   }
+
+       //   if (cudaErr == cudaErrorNoDevice) {
+       //      printf("cudaErrorNoDevice has happened \n");
+       //   }
+       //}
+       CUDACHECK(cudaErr);
+     }
 
 #if NCCL_VERSION_CODE >= NCCL_VERSION(2,4,0)
      if (comms) {
