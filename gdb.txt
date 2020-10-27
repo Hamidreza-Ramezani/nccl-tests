@@ -14,3 +14,150 @@ Thread 1 "all_reduce_perf" hit Breakpoint 1, run () at common.cu:767
 +:qqqqqqQq
 Undefined command: "".  Try "help".
 +q
++set pagination off
++break /nfs/scistore08/alistgrp/hramezan/nccl-tests/src/common.cu:403
+Breakpoint 1 at 0x4aae: file common.cu, line 403.
++run
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x2aab03c02700 (LWP 41510)]
+[New Thread 0x2aab05304700 (LWP 41520)]
+[New Thread 0x2aab05505700 (LWP 41521)]
+[New Thread 0x2aab05706700 (LWP 41522)]
+[New Thread 0x2aab05a09700 (LWP 41525)]
+[New Thread 0x2aab05f01700 (LWP 41531)]
+[Thread 0x2aab05f01700 (LWP 41531) exited]
+warning: Cuda API error detected: cudaMalloc returned (0x2e)
+
+[New Thread 0x2aab05f01700 (LWP 41532)]
+[Thread 0x2aab05f01700 (LWP 41532) exited]
+warning: Cuda API error detected: cudaStreamCreateWithFlags returned (0x2e)
+
+[Thread 0x2aab05a09700 (LWP 41525) exited]
+[Thread 0x2aab05706700 (LWP 41522) exited]
+[Thread 0x2aab05505700 (LWP 41521) exited]
+[Thread 0x2aab05304700 (LWP 41520) exited]
+[Thread 0x2aab03c02700 (LWP 41510) exited]
+[Inferior 1 (process 41478) exited with code 02]
++- 
++q
++set pagination off
++break /nfs/scistore08/alistgrp/hramezan/nccl-tests/src/common.cu:403
+Breakpoint 1 at 0x4b20: file common.cu, line 403.
++run
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x2aab03c02700 (LWP 43656)]
+[New Thread 0x2aab05304700 (LWP 43660)]
+[New Thread 0x2aab05505700 (LWP 43661)]
+[New Thread 0x2aab05706700 (LWP 43662)]
+[New Thread 0x2aab05a09700 (LWP 43663)]
+[New Thread 0x2aab05f01700 (LWP 43666)]
+[New Thread 0x2aab06102700 (LWP 43667)]
+[New Thread 0x2aab06503700 (LWP 43674)]
+[New Thread 0x2aab06704700 (LWP 43722)]
+[New Thread 0x2aab06905700 (LWP 43723)]
+[Thread 0x2aab06503700 (LWP 43674) exited]
+[New Thread 0x2aab07c82700 (LWP 43800)]
+[New Thread 0x2aab07a81700 (LWP 43801)]
+[Thread 0x2aab06905700 (LWP 43723) exited]
+[Thread 0x2aab06704700 (LWP 43722) exited]
+
+Thread 1 "all_reduce_perf" hit Breakpoint 1, startColl (args=0x7fffffffb060, type=ncclInt32, op=ncclSum, root=-1, in_place=0, iter=0) at common.cu:403
+403	  if (args->nGpus > 1) NCCLCHECK(ncclGroupEnd());
++- 
++info breakpoints 
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555558b20 in startColl(threadArgs*, ncclDataType_t, ncclRedOp_t, int, int, int) at common.cu:403
+	breakpoint already hit 5 times
++info breakpoints 
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555558b20 in startColl(threadArgs*, ncclDataType_t, ncclRedOp_t, int, int, int) at common.cu:403
+	breakpoint already hit 7 times
++info breakpoints 
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555558b20 in startColl(threadArgs*, ncclDataType_t, ncclRedOp_t, int, int, int) at common.cu:403
+	breakpoint already hit 9 times
++continue 
+Continuing.
+
+Thread 1 "all_reduce_perf" hit Breakpoint 1, startColl (args=0x7fffffffb060, type=ncclInt32, op=ncclSum, root=-1, in_place=0, iter=1) at common.cu:403
+403	  if (args->nGpus > 1) NCCLCHECK(ncclGroupEnd());
++info breakpoints 
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555558b20 in startColl(threadArgs*, ncclDataType_t, ncclRedOp_t, int, int, int) at common.cu:403
+	breakpoint already hit 12 times
++info breakpoints 
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555558b20 in startColl(threadArgs*, ncclDataType_t, ncclRedOp_t, int, int, int) at common.cu:403
+	breakpoint already hit 14 times
++info breakpoints 
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555558b20 in startColl(threadArgs*, ncclDataType_t, ncclRedOp_t, int, int, int) at common.cu:403
+	breakpoint already hit 16 times
++info breakpoints 
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555558b20 in startColl(threadArgs*, ncclDataType_t, ncclRedOp_t, int, int, int) at common.cu:403
+	breakpoint already hit 18 times
++info breakpoints 
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555558b20 in startColl(threadArgs*, ncclDataType_t, ncclRedOp_t, int, int, int) at common.cu:403
+	breakpoint already hit 20 times
++q
++set pagination off
++break /nfs/scistore08/alistgrp/hramezan/nccl-tests/src/common.cu:403
+Breakpoint 1 at 0x4b20: file common.cu, line 403.
++run
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x2aab03c02700 (LWP 5233)]
+[New Thread 0x2aab05304700 (LWP 5240)]
+[New Thread 0x2aab05505700 (LWP 5241)]
+[New Thread 0x2aab05706700 (LWP 5242)]
+[New Thread 0x2aab05a09700 (LWP 5243)]
+[New Thread 0x2aab05f01700 (LWP 5247)]
+[New Thread 0x2aab06102700 (LWP 5248)]
+[New Thread 0x2aab06503700 (LWP 5252)]
+
+Thread 9 "all_reduce_perf" received signal SIGINT, Interrupt.
+[Switching to Thread 0x2aab06503700 (LWP 5252)]
+0x00002aaafb5f240d in accept () from /lib/x86_64-linux-gnu/libpthread.so.0
++- 
++set pagination off
++break /nfs/scistore08/alistgrp/hramezan/nccl-tests/src/common.cu:403
+Breakpoint 1 at 0x4b20: file common.cu, line 403.
++ignore 1 74
++run
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x2aab03c02700 (LWP 6766)]
+[New Thread 0x2aab05304700 (LWP 6767)]
+[New Thread 0x2aab05505700 (LWP 6768)]
+[New Thread 0x2aab05706700 (LWP 6769)]
+[New Thread 0x2aab05a09700 (LWP 6776)]
+[New Thread 0x2aab05f01700 (LWP 6777)]
+[New Thread 0x2aab06102700 (LWP 6789)]
+[New Thread 0x2aab06503700 (LWP 6793)]
+[New Thread 0x2aab06704700 (LWP 6851)]
+[New Thread 0x2aab06905700 (LWP 6855)]
+[Thread 0x2aab06503700 (LWP 6793) exited]
+[New Thread 0x2aab07c82700 (LWP 7016)]
+[New Thread 0x2aab07a81700 (LWP 7017)]
+[Thread 0x2aab06905700 (LWP 6855) exited]
+[Thread 0x2aab06704700 (LWP 6851) exited]
+warning: Cuda API error detected: cudaMalloc returned (0x2)
+
+warning: Cuda API error detected: cudaMalloc returned (0x2)
+
+warning: Cuda API error detected: cudaMalloc returned (0x2)
+
+warning: Cuda API error detected: cudaMalloc returned (0x2)
+
+
+CUDA Exception: Warp Illegal Address
+
+Thread 1 "all_reduce_perf" received signal CUDA_EXCEPTION_14, Warp Illegal Address.
+[Switching focus to CUDA kernel 78, grid 44, block (0,0,0), thread (32,0,0), device 0, sm 0, warp 0, lane 0]
+0x00002aab7dfda630 in ReduceCopy128bMulti<FuncSum<int>, int, 8, 1, 1, 1, 1> (w=<optimized out>, nw=<optimized out>, t=<optimized out>, nsrcs=1, s=0x2aab01fff7d8, ndsts=1, d=0x2aab01fff7e0, elemOffset=<optimized out>, Npack=65536, w=<optimized out>, nw=<optimized out>, t=<optimized out>, nsrcs=1, ndsts=1, elemOffset=<optimized out>, Npack=65536) at /nfs/scistore08/alistgrp/hramezan/nccl/src/collectives/device/common_kernel.h:297
+297	      for (int u = 0; u < UNROLL; ++u) Store128(dsts[i]+u*WARP_SIZE, vals[u]);
++- 

@@ -324,8 +324,8 @@ testResult_t testStreamSynchronize(int ngpus, cudaStream_t* streams, ncclComm_t*
    for (int i=0; i<ngpus; i++) {
      if (done[i]) continue;
     
-     CUDACHECK(cudaSetDevice(i));
-     CUDACHECK(cudaStreamSynchronize(streams[i]));
+     //CUDACHECK(cudaSetDevice(i));
+     //CUDACHECK(cudaStreamSynchronize(streams[i]));
      cudaErr = cudaStreamQuery(streams[i]);
      //while ((cudaErr = cudaStreamQuery(streams[i])) != cudaSuccess) {
      //   cudaStreamSynchronize(streams[i]);
@@ -395,6 +395,9 @@ testResult_t startColl(struct threadArgs* args, ncclDataType_t type, ncclRedOp_t
     int rank = ((args->proc*args->nThreads + args->thread)*args->nGpus + i);
     char* recvBuff = ((char*)args->recvbuffs[i]) + shift;
     char* sendBuff = ((char*)args->sendbuffs[i]) + shift;
+    //char* recvBuff = ((char*)args->recvbuffs[i]);
+    //char* sendBuff = ((char*)args->sendbuffs[i]);
+
     TESTCHECK(args->collTest->runColl(
           (void*)(in_place ? recvBuff + args->sendInplaceOffset*rank : sendBuff),
           (void*)(in_place ? recvBuff + args->recvInplaceOffset*rank : recvBuff),
